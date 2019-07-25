@@ -35,7 +35,7 @@ crawl(URLs);
 setInterval(function () {
     // console.log('crawler called');
     crawl(URLs);
-}, 10000);
+}, 300000);
 
 server = require('./socket')(server, crawl.ee);
 

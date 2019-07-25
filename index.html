@@ -28,9 +28,9 @@
         socket.emit("past");
       });
 
-      let mt1 = { x: [], y: [], type: "scatter" };
-      let mt2 = { x: [], y: [], type: "scatter" };
-      let mt3 = { x: [], y: [], type: "scatter" };
+      let mt1 = { x: [], y: [], type: "scatter", mode: 'lines+markers'};
+      let mt2 = { x: [], y: [], type: "scatter", mode: 'lines+markers' };
+      let mt3 = { x: [], y: [], type: "scatter", mode: 'lines+markers' };
 
       socket.on("data", function(data) {
         // console.log(data);
