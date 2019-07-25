@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+      <hr>
+    <h1 style="text-align: center">Amazon web scraping POC</h1><hr>
+    <div id="chart"></div>
+    <script>
+      function loadChart(t1, t2, t3) {
+        var data = [t1, t2, t3];
+        console.log(data);
+        var layout = {
+          showlegend: true,
+          legend: {
+            orientation: "h",
+            x: 0,
+            y: -1
+          }
+        };
+        Plotly.newPlot("chart", data, layout, { showSendToCloud: true });
+      }
+
+      // socket stuff
+      var socket = io.connect("/");
+      socket.on("connect", function(data) {
+        socket.emit("past");
+      });
+
+      let mt1 = { x: [], y: [], type: "scatter" };
+      let mt2 = { x: [], y: [], type: "scatter" };
+      let mt3 = { x: [], y: [], type: "scatter" };
+
+      socket.on("data", function(data) {
+        // console.log(data);
+        if (data.length < 1) return;
+        let when;
+        for (let i = 0; i < data.length; i++) {
+          const d = data[i];
+          if (i % 3 == 0) {
+            when = new Date(d.when);
+          }
+          if (d.asin === "B00D89VK3Q") {
+            mt1.x.push(when);
+            mt1.y.push(d.price);
+            mt1.name = d.title;
+            mt1.type = "scatter";
+          }
+          if (d.asin === "B07TX474NT") {
+            mt2.x.push(when);
+            mt2.y.push(d.price);
+            mt2.name = d.title;
+            mt2.type = "scatter";
+          }
+          if (d.asin === "B00M9K7L8S") {
+            mt3.x.push(when);
+            mt3.y.push(d.price);
+            mt3.name = d.title;
+            mt3.type = "scatter";
+          }
+        }
+
+        loadChart(mt1, mt2, mt3);
+      });
+    </script>
+  </body>
+</html>
